@@ -176,12 +176,8 @@
   .drink-stats .stat{display:flex; flex-direction:column; gap:2px; min-width:0;}
   .drink-stats .k{font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--text-dim);}
   .drink-stats .v{font-family:var(--font-mono); font-weight:700; font-size:13px;}
-  .venda-input{
-    width:100%; font-family:var(--font-mono); font-size:12.5px; font-weight:700;
-    background:var(--card-2); border:1px solid var(--line); color:var(--text);
-    border-radius:7px; padding:3px 6px;
-  }
-  .venda-input:focus-visible{outline:2px solid var(--sea); outline-offset:1px;}
+  .venda-value{display:block;}
+  .venda-value.empty{color:var(--text-dim); font-weight:600; font-size:11px; font-family:var(--font-body);}
   .lucro{font-family:var(--font-mono); font-weight:700;}
   .lucro.pos{color:var(--good);}
   .lucro.neg{color:var(--bad);}
@@ -376,7 +372,7 @@
       ['Chouriço',300],['Carne',200],['Presunto',300],['Leitão',300],['Leite',75]
     ]},
     { key:'extras', label:'Extras', icon:'✨', color:'var(--violet)', items:[
-      ['Gelo',40],['Receita Secreta',20]
+      ['Gelo',40],['Receita Secreta',20],['Grão de Café',20]
     ]},
     { key:'bebidas', label:'Bebidas & Base', icon:'🍾', color:'var(--sea)', items:[
       ['Alchool',500],['Garrafão de Água',10],['Cerveja',80],['Água Tónica',30]
@@ -500,7 +496,7 @@
         '<div class="drink-stats">' +
           '<div class="stat"><span class="k">Custo un.</span><span class="v custo tabular">' + euro(r.custoUnit) + '</span></div>' +
           '<div class="stat"><span class="k">Venda un.</span>' +
-            '<input type="number" min="0" step="1" inputmode="numeric" class="venda-input" id="venda-' + r.id + '" placeholder="—" value="' + (venda !== null ? venda : '') + '" aria-label="Preço de venda de ' + r.n + '"></div>' +
+            '<span class="v venda-value tabular' + (venda === null ? ' empty' : '') + '" id="venda-' + r.id + '">' + (venda !== null ? euro(venda) : '—') + '</span></div>' +
           '<div class="stat"><span class="k">Lucro un.</span>' + lucroHtml + '</div>' +
         '</div>' +
         '<div class="stepper">' +
@@ -549,12 +545,6 @@
       el.querySelector('.qty-dec').addEventListener('click', function(){ setQty(id, state.qty[id] - 1); });
       el.querySelector('.qty-inc').addEventListener('click', function(){ setQty(id, state.qty[id] + 1); });
       el.querySelector('.qty-input').addEventListener('input', function(e){ setQty(id, parseInt(e.target.value, 10) || 0, true); });
-      el.querySelector('.venda-input').addEventListener('input', function(e){
-        var v = e.target.value === '' ? null : Math.max(0, parseFloat(e.target.value));
-        state.venda[id] = (v === null || isNaN(v)) ? null : v;
-        renderRecipeMoney(id);
-        renderFooter();
-      });
     });
   }
 
