@@ -447,7 +447,7 @@
       ['Chouriço',300],['Carne',200],['Presunto',300],['Leitão',300],['Leite',75]
     ]},
     { key:'extras', label:'Extras', icon:'✨', color:'var(--violet)', items:[
-      ['Gelo',40],['Receita Secreta',20]
+      ['Gelo',40],['Receita Secreta',20],['Grão de Café',150]
     ]},
     { key:'bebidas', label:'Bebidas & Base', icon:'🍾', color:'var(--sea)', items:[
       ['Alchool',500],['Garrafão de Água',10],['Cerveja',80],['Água Tónica',30]
@@ -471,17 +471,17 @@
     { id:'junk-blue', n:'Junk Blue', icon:'⚡', fam:'energetico', ing:[['Açúcar',1],['Garrafão de Água',1],['Mirtilo',2],['Grão de Café',2]] },
     { id:'junk-green', n:'Junk Green', icon:'⚡', fam:'energetico', ing:[['Açúcar',1],['Garrafão de Água',1],['Pera da Horta',2],['Grão de Café',2]] },
     { id:'junk-orange', n:'Junk Orange', icon:'⚡', fam:'energetico', ing:[['Açúcar',1],['Garrafão de Água',1],['Laranja',3],['Grão de Café',3]] },
-    { id:'junk-purple', n:'Junk Purple', icon:'⚡', fam:'energetico', ing:[['Banana',3],['Garrafão de Água',3],['Açúcar',3],['Manga',5],['Grão de Café',8]] },
     { id:'junk-red', n:'Junk Red', icon:'⚡', fam:'energetico', ing:[['Açúcar',2],['Garrafão de Água',2],['Morango',6],['Grão de Café',6]] },
+	    { id:'junk-purple', n:'Junk Purple', icon:'⚡', fam:'energetico', ing:[['Banana',3],['Garrafão de Água',3],['Açúcar',3],['Manga',5],['Grão de Café',8]] },
     { id:'absinto', n:'Absinto', icon:'🍸', fam:'alcool', ing:[['Folhas de Chá',1],['Alchool',1],['Açúcar',1],['Garrafão de Água',1]] },
     { id:'tequilla', n:'Tequilla', icon:'🥃', fam:'alcool', ing:[['Alchool',1],['Pera da Horta',1],['Garrafão de Água',1]] },
     { id:'utopal', n:'Utopal de Frutos Vermelhos', icon:'🍷', fam:'semalcool', ing:[['Ananas',1],['Açúcar',1],['Receita Secreta',1],['Garrafão de Água',1]] },
     { id:'gin', n:'Gin', icon:'🍸', fam:'alcool', ing:[['Gelo',1],['Alchool',1],['Coentros',1],['Garrafão de Água',1]] },
-    { id:'pina-colada', n:'Pina Colada', icon:'🍍', fam:'alcool', ing:[['Garrafão de Água',1],['Ananas',1],['Alchool',1],['Coco',1],['Gelo',1]] },
+    { id:'pinacolada', n:'Pina Colada', icon:'🍍', fam:'alcool', ing:[['Garrafão de Água',1],['Ananas',1],['Alchool',1],['Coco',1],['Gelo',1]] },
     { id:'margarita', n:'Margarita', icon:'🍸', fam:'alcool', ing:[['Garrafão de Água',1],['Ananas',1],['Alchool',1],['Gelo',1],['Açúcar',1]] }
   ];
 
-  var UNPRICED = { 'grao de cafe':true };
+  var UNPRICED = { 'grao de cafe':false };
 
   function norm(s){
     return s.toLowerCase()
@@ -516,8 +516,8 @@
 
   /* Preços de venda ao público (menu oficial do bar) */
   var DEFAULT_VENDA = {
-    vodka:1500, whiskey:1500, caipirinha:1500, absinto:1500, gin:1500,
-    'uto-cola':1200, sumol:1200, utopal:1200,
+    vodka:1500, whiskey:1500, caipirinha:1500, absinto:1500, gin:1500, champagne:1500, tequilla:1500, pinacolada:1500, margarita:1500,
+    'uto-cola':1200, sumol:1300, utopal:1300,
     'junk-green':2000, 'junk-blue':2500, 'junk-orange':3000, 'junk-red':4000, 'junk-purple':5000
   };
 
