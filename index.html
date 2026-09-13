@@ -227,6 +227,49 @@
   .stock-row .p{font-family:var(--font-mono); font-weight:700; color:var(--sun-deep); white-space:nowrap;}
   .stock-note{padding:12px 18px; font-size:12px; color:var(--text-dim); background:var(--card-2); border-top:1px solid var(--line);}
 
+  /* ---------- Money laundering calculator ---------- */
+  .launder-panel{margin-top:22px;}
+  .launder-body{display:grid; grid-template-columns:1fr 1fr; gap:26px; align-items:start;}
+  @media (max-width:760px){ .launder-body{grid-template-columns:1fr;} }
+  .launder-field{display:flex; flex-direction:column; gap:8px;}
+  .launder-field + .launder-field{margin-top:18px;}
+  .launder-field label{
+    font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--text-dim); font-weight:800;
+    display:flex; justify-content:space-between; align-items:baseline; gap:8px;
+  }
+  .launder-input{
+    width:100%; font-family:var(--font-mono); font-size:17px; font-weight:700;
+    background:var(--card-2); border:1px solid var(--line); color:var(--text);
+    border-radius:10px; padding:10px 12px;
+  }
+  .launder-input:focus-visible{outline:2px solid var(--sea); outline-offset:1px;}
+  .launder-pct-row{display:flex; align-items:center; gap:12px;}
+  .launder-range{flex:1; accent-color:var(--sun-deep); cursor:pointer; height:22px;}
+  .launder-range:focus-visible{outline:2px solid var(--sea); outline-offset:2px;}
+  .launder-pct-input-wrap{
+    display:flex; align-items:center; gap:3px; flex:none;
+    background:var(--card-2); border:1px solid var(--line); border-radius:9px; padding:6px 10px;
+  }
+  .launder-pct-input-wrap:focus-within{outline:2px solid var(--sea); outline-offset:1px;}
+  .launder-pct-input{
+    width:44px; border:none; background:transparent; color:var(--sun-deep);
+    font-family:var(--font-mono); font-weight:800; font-size:15px; text-align:right; padding:0;
+  }
+  .launder-pct-input:focus-visible{outline:none;}
+  .launder-pct-input::-webkit-inner-spin-button, .launder-pct-input::-webkit-outer-spin-button{ -webkit-appearance:none; margin:0; }
+  .launder-pct-suffix{font-family:var(--font-mono); font-weight:700; color:var(--sun-deep); font-size:14px;}
+  .launder-hint{font-size:11.5px; color:var(--text-dim); line-height:1.5;}
+  .launder-results{display:flex; flex-direction:column; gap:10px;}
+  .launder-stat{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:13px 15px; border-radius:var(--radius-md); border:1px solid var(--line); background:var(--card-2);
+  }
+  .launder-stat .k{font-size:12.5px; color:var(--text-dim); font-weight:700; letter-spacing:.02em;}
+  .launder-stat .v{font-family:var(--font-mono); font-weight:800; font-size:18px;}
+  .launder-stat.highlight{background:color-mix(in srgb, var(--good) 14%, var(--card)); border-color:color-mix(in srgb, var(--good) 45%, var(--line));}
+  .launder-stat.highlight .v{color:var(--good);}
+  .launder-stat.malas .v{color:var(--sun-deep);}
+
   /* ---------- Footer bar ---------- */
   .footer-bar{
     position:fixed; left:0; right:0; bottom:0; z-index:20;
@@ -327,6 +370,38 @@
       <p class="stock-note">Grão de Café é fornecido pelo bar — sem preço de compra na lista, por isso não entra no custo.</p>
     </section>
   </main>
+
+  <section class="panel launder-panel" aria-labelledby="launderTitle">
+    <div class="panel-head">
+      <h2 id="launderTitle">🧼 Lavagem de Dinheiro</h2>
+      <span class="count">margem 10% – 15%</span>
+    </div>
+    <div class="panel-body launder-body">
+      <div>
+        <div class="launder-field">
+          <label for="launderValor">Valor sujo a lavar (€)</label>
+          <input type="number" min="0" step="1000" inputmode="numeric" class="launder-input" id="launderValor" placeholder="Ex.: 1 500 000">
+        </div>
+        <div class="launder-field">
+          <label for="launderPct">Percentagem de lavagem</label>
+          <div class="launder-pct-row">
+            <input type="range" min="10" max="15" step="0.5" value="12.5" class="launder-range" id="launderPct" aria-label="Percentagem de lavagem (arrastar)">
+            <div class="launder-pct-input-wrap">
+              <input type="number" min="10" max="15" step="0.1" value="12.5" inputmode="decimal" class="launder-pct-input" id="launderPctInput" aria-label="Percentagem de lavagem (valor exato)">
+              <span class="launder-pct-suffix">%</span>
+            </div>
+          </div>
+          <span class="launder-hint">Mínimo 10% · Máximo 15% — arrasta o cursor ou escreve o valor exato.</span>
+        </div>
+      </div>
+      <div class="launder-results">
+        <div class="launder-stat"><span class="k">Comissão retida pelo bar</span><span class="v tabular" id="launderComissao">0,00 €</span></div>
+        <div class="launder-stat highlight"><span class="k">Valor a devolver ao cliente</span><span class="v tabular" id="launderDevolver">0,00 €</span></div>
+        <div class="launder-stat malas"><span class="k">Malas seguras necessárias</span><span class="v tabular" id="launderMalas">0</span></div>
+      </div>
+    </div>
+    <p class="stock-note">Cada 500.000 € lavados consomem 1 mala segura (arredondado para cima).</p>
+  </section>
 </div>
 
 <div class="footer-bar">
@@ -372,7 +447,7 @@
       ['Chouriço',300],['Carne',200],['Presunto',300],['Leitão',300],['Leite',75]
     ]},
     { key:'extras', label:'Extras', icon:'✨', color:'var(--violet)', items:[
-      ['Gelo',40],['Receita Secreta',20],['Grão de Café',150]
+      ['Gelo',40],['Receita Secreta',20]
     ]},
     { key:'bebidas', label:'Bebidas & Base', icon:'🍾', color:'var(--sea)', items:[
       ['Alchool',500],['Garrafão de Água',10],['Cerveja',80],['Água Tónica',30]
@@ -396,17 +471,17 @@
     { id:'junk-blue', n:'Junk Blue', icon:'⚡', fam:'energetico', ing:[['Açúcar',1],['Garrafão de Água',1],['Mirtilo',2],['Grão de Café',2]] },
     { id:'junk-green', n:'Junk Green', icon:'⚡', fam:'energetico', ing:[['Açúcar',1],['Garrafão de Água',1],['Pera da Horta',2],['Grão de Café',2]] },
     { id:'junk-orange', n:'Junk Orange', icon:'⚡', fam:'energetico', ing:[['Açúcar',1],['Garrafão de Água',1],['Laranja',3],['Grão de Café',3]] },
+    { id:'junk-purple', n:'Junk Purple', icon:'⚡', fam:'energetico', ing:[['Banana',3],['Garrafão de Água',3],['Açúcar',3],['Manga',5],['Grão de Café',8]] },
     { id:'junk-red', n:'Junk Red', icon:'⚡', fam:'energetico', ing:[['Açúcar',2],['Garrafão de Água',2],['Morango',6],['Grão de Café',6]] },
-	    { id:'junk-purple', n:'Junk Purple', icon:'⚡', fam:'energetico', ing:[['Banana',3],['Garrafão de Água',3],['Açúcar',3],['Manga',5],['Grão de Café',8]] },
     { id:'absinto', n:'Absinto', icon:'🍸', fam:'alcool', ing:[['Folhas de Chá',1],['Alchool',1],['Açúcar',1],['Garrafão de Água',1]] },
     { id:'tequilla', n:'Tequilla', icon:'🥃', fam:'alcool', ing:[['Alchool',1],['Pera da Horta',1],['Garrafão de Água',1]] },
     { id:'utopal', n:'Utopal de Frutos Vermelhos', icon:'🍷', fam:'semalcool', ing:[['Ananas',1],['Açúcar',1],['Receita Secreta',1],['Garrafão de Água',1]] },
     { id:'gin', n:'Gin', icon:'🍸', fam:'alcool', ing:[['Gelo',1],['Alchool',1],['Coentros',1],['Garrafão de Água',1]] },
-    { id:'pinacolada', n:'Pina Colada', icon:'🍍', fam:'alcool', ing:[['Garrafão de Água',1],['Ananas',1],['Alchool',1],['Coco',1],['Gelo',1]] },
+    { id:'pina-colada', n:'Pina Colada', icon:'🍍', fam:'alcool', ing:[['Garrafão de Água',1],['Ananas',1],['Alchool',1],['Coco',1],['Gelo',1]] },
     { id:'margarita', n:'Margarita', icon:'🍸', fam:'alcool', ing:[['Garrafão de Água',1],['Ananas',1],['Alchool',1],['Gelo',1],['Açúcar',1]] }
   ];
 
-  var UNPRICED = { 'grao de cafe':false };
+  var UNPRICED = { 'grao de cafe':true };
 
   function norm(s){
     return s.toLowerCase()
@@ -441,21 +516,24 @@
 
   /* Preços de venda ao público (menu oficial do bar) */
   var DEFAULT_VENDA = {
-    vodka:1500, whiskey:1500, caipirinha:1500, absinto:1500, gin:1500, champagne:1500, tequilla:1500, pinacolada:1500, margarita:1500,
-    'uto-cola':1200, sumol:1300, utopal:1300,
+    vodka:1500, whiskey:1500, caipirinha:1500, absinto:1500, gin:1500,
+    'uto-cola':1200, sumol:1200, utopal:1200,
     'junk-green':2000, 'junk-blue':2500, 'junk-orange':3000, 'junk-red':4000, 'junk-purple':5000
   };
 
+  var MALA_SEGURA_VALOR = 500000;
+
   /* ---------- State ---------- */
-  var state = { qty:{}, venda:{} };
+  var state = { qty:{}, venda:{}, launder:{ valor:0, pct:12.5 } };
   RECIPES.forEach(function(r){ state.qty[r.id] = 0; state.venda[r.id] = (r.id in DEFAULT_VENDA) ? DEFAULT_VENDA[r.id] : null; });
   var hiddenCats = {};
 
-  function snapshot(){ return { qty: state.qty, venda: state.venda, hiddenCats: hiddenCats }; }
+  function snapshot(){ return { qty: state.qty, venda: state.venda, hiddenCats: hiddenCats, launder: state.launder }; }
   function restore(data){
     if (data && data.qty) { Object.keys(data.qty).forEach(function(k){ if (k in state.qty) state.qty[k] = data.qty[k]; }); }
     if (data && data.venda) { Object.keys(data.venda).forEach(function(k){ if (k in state.venda) state.venda[k] = data.venda[k]; }); }
     if (data && data.hiddenCats) { hiddenCats = data.hiddenCats; }
+    if (data && data.launder) { state.launder = data.launder; }
   }
 
   function renderHeroStats(){
@@ -703,6 +781,68 @@
     );
   }
 
+  function renderLaunder(){
+    var valorInput = document.getElementById('launderValor');
+    var rangeInput = document.getElementById('launderPct');
+    var pctInput = document.getElementById('launderPctInput');
+
+    var pctRaw = parseFloat(pctInput.value);
+    if (isNaN(pctRaw)) pctRaw = parseFloat(rangeInput.value);
+    if (isNaN(pctRaw)) pctRaw = 12.5;
+    var pct = pctRaw;
+    if (pct < 10) pct = 10;
+    if (pct > 15) pct = 15;
+
+    rangeInput.value = pct;
+
+    var valor = parseFloat(valorInput.value);
+    if (isNaN(valor) || valor < 0) valor = 0;
+
+    state.launder.valor = valor;
+    state.launder.pct = pct;
+
+    var comissao = valor * (pct / 100);
+    var devolver = valor - comissao;
+    var malas = valor > 0 ? Math.ceil(valor / MALA_SEGURA_VALOR) : 0;
+
+    document.getElementById('launderComissao').textContent = euro(comissao);
+    document.getElementById('launderDevolver').textContent = euro(devolver);
+    document.getElementById('launderMalas').textContent = malas + (malas === 1 ? ' mala' : ' malas');
+  }
+
+  function normalizeLaunderPct(){
+    var pctInput = document.getElementById('launderPctInput');
+    var v = parseFloat(pctInput.value);
+    if (isNaN(v)) v = state.launder.pct || 12.5;
+    if (v < 10) v = 10;
+    if (v > 15) v = 15;
+    pctInput.value = v;
+    renderLaunder();
+  }
+
+  function wireLaunder(){
+    var valorInput = document.getElementById('launderValor');
+    var rangeInput = document.getElementById('launderPct');
+    var pctInput = document.getElementById('launderPctInput');
+
+    if (state.launder.valor) valorInput.value = state.launder.valor;
+    rangeInput.value = state.launder.pct;
+    pctInput.value = state.launder.pct;
+
+    valorInput.addEventListener('input', renderLaunder);
+
+    rangeInput.addEventListener('input', function(){
+      pctInput.value = rangeInput.value;
+      renderLaunder();
+    });
+
+    pctInput.addEventListener('input', renderLaunder);
+    pctInput.addEventListener('blur', normalizeLaunderPct);
+    pctInput.addEventListener('keydown', function(e){ if (e.key === 'Enter') pctInput.blur(); });
+
+    renderLaunder();
+  }
+
   function openModal(){
     document.getElementById('modalBody').innerHTML = buildList();
     document.getElementById('modalVeil').hidden = false;
@@ -720,6 +860,7 @@
       renderFooter();
     });
     document.getElementById('stockSearch').addEventListener('input', function(e){ renderStock(e.target.value); });
+    wireLaunder();
   }
 
   function render(){
