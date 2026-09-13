@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bar Bahamas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Tokens ---------- */
+  :root{
+    --bg:#F2E4C4; --bg-2:#E9D9AE;
+    --card:#FFFDF7; --card-2:#FFF6E1;
+    --line:#E3D2A0;
+    --text:#152F36; --text-dim:#5C7679;
+    --sea:#0E9DA6; --sea-deep:#0A6670;
+    --sun:#FFB23E; --sun-deep:#C98317;
+    --coral:#FF6F59; --coral-deep:#D9503C;
+    --good:#0F9C79; --good-bg:#DFF3EC;
+    --bad:#C0453A; --violet:#8B6FB0;
+    --ink-on-accent:#152018;
+    --shadow:0 14px 32px -16px rgba(20,45,45,.28);
+    --radius-lg:20px; --radius-md:14px; --radius-sm:9px;
+    --font-display:'Bungee','Arial Narrow',sans-serif;
+    --font-body:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --font-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  /* Visual fixo: o Bar Bahamas mantém sempre o tema claro/pôr-do-sol,
+     independentemente do modo claro/escuro do dispositivo de quem o abre. */
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background-color:var(--bg);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat:repeat;
+    background-size:180px 180px;
+    color:var(--text);
+    font-family:var(--font-body);
+    padding-inline:20px;
+    padding-block:0 108px;
+  }
+  a{color:inherit;}
+  h1,h2,h3{font-family:var(--font-display); font-weight:400; text-wrap:balance; letter-spacing:.01em; margin:0;}
+  .mono{font-family:var(--font-mono);}
+  .tabular{font-variant-numeric:tabular-nums;}
+
+  .wrap{max-width:1180px; margin:0 auto;}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    margin-inline:-20px;
+    padding:40px 20px 60px;
+    background:
+      linear-gradient(112deg, rgba(5,32,36,.74) 0%, rgba(5,32,36,.32) 40%, rgba(5,32,36,0) 66%),
+      linear-gradient(180deg, #FFE2A1 0%, #FFB679 19%, #FF8E6A 35%, #2FB6BE 63%, #0B6670 100%);
+    color:#FFF8E8;
+    overflow:hidden;
+  }
+  .hero-palms{position:absolute; inset:0; opacity:.9; pointer-events:none;}
+  .hero-stamp{position:absolute; top:8px; right:0; width:150px; height:150px; opacity:.8; transform:rotate(-7deg); pointer-events:none;}
+  .hero-eyebrow{
+    position:relative; display:inline-block;
+    font-family:var(--font-mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase;
+    color:#FFF3DC; opacity:.85;
+  }
+  h1.title{
+    position:relative;
+    font-size:clamp(34px, 6.6vw, 66px);
+    line-height:1.02;
+    margin-top:16px;
+    max-width:11ch;
+    color:#FFFBF0;
+    text-shadow:0 3px 20px rgba(4,20,22,.45);
+  }
+  h1.title em{
+    font-style:normal;
+    color:#FFFBF0;
+    text-shadow:0 3px 20px rgba(4,20,22,.5), 0 0 30px rgba(255,216,107,.35);
+  }
+  .hero-sub{
+    position:relative;
+    margin-top:10px;
+    max-width:56ch;
+    color:#FFF3DC;
+    font-size:15px;
+    line-height:1.55;
+    text-shadow:0 1px 8px rgba(4,20,22,.3);
+  }
+  .hero-stats{position:relative; margin-top:20px; display:flex; gap:10px; flex-wrap:wrap; font-family:var(--font-mono); font-size:13px;}
+  .hero-stat{background:rgba(5,32,36,.42); border:1px solid rgba(255,248,232,.3); color:#FFF8E8; padding:7px 12px; border-radius:999px;}
+  .hero-stat b{color:var(--sun); font-weight:700;}
+
+  .wave{display:block; width:100%; height:26px; margin-top:-2px;}
+
+  /* ---------- Layout ---------- */
+  .grid{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:22px; margin-top:26px; align-items:start;}
+  @media (max-width:900px){ .grid{grid-template-columns:1fr;} }
+
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:var(--radius-lg); box-shadow:var(--shadow); overflow:hidden;}
+  .panel-head{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:16px 18px; border-bottom:1px solid var(--line); background:var(--card-2); flex-wrap:wrap;
+  }
+  .panel-head h2{font-size:19px; letter-spacing:.01em; display:flex; align-items:center; gap:9px;}
+  .panel-head .count{font-family:var(--font-mono); font-size:12px; color:var(--text-dim); letter-spacing:.04em;}
+  .panel-body{padding:18px;}
+
+  .btn{
+    appearance:none; border:1px solid var(--line); background:var(--card);
+    color:var(--text); font-family:var(--font-body); font-weight:700; font-size:13px;
+    padding:8px 13px; border-radius:999px; cursor:pointer;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:transform .12s ease, border-color .12s ease;
+  }
+  .btn:hover{transform:translateY(-1px); border-color:var(--sea);}
+  .btn:active{transform:translateY(0);}
+  .btn:focus-visible{outline:2px solid var(--sea); outline-offset:2px;}
+  .btn-ghost{background:transparent;}
+  .btn-accent{background:var(--sun); border-color:transparent; color:var(--ink-on-accent); font-weight:800;}
+  .btn-accent:hover{filter:brightness(1.05);}
+
+  /* ---------- Recipe families & cards ---------- */
+  .fam-section{border:1px solid var(--line); border-radius:var(--radius-md); overflow:hidden; background:var(--card-2);}
+  .fam-section + .fam-section{margin-top:12px;}
+  .fam-section > summary{
+    display:flex; align-items:center; gap:8px; cursor:pointer; list-style:none;
+    font-family:var(--font-body); font-weight:800; font-size:12.5px;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--fam-color);
+    padding:12px 14px; -webkit-tap-highlight-color:transparent;
+  }
+  .fam-section > summary::-webkit-details-marker{display:none;}
+  .fam-section > summary:focus-visible{outline:2px solid var(--sea); outline-offset:-2px;}
+  .fam-section .fam-dot{width:9px; height:9px; border-radius:50%; background:var(--fam-color); flex:none;}
+  .fam-section .fam-count{
+    font-family:var(--font-mono); color:var(--text-dim); text-transform:none; letter-spacing:0;
+    font-weight:600; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:1px 8px;
+  }
+  .fam-section .fam-selected{
+    font-family:var(--font-mono); color:var(--ink-on-accent); text-transform:none; letter-spacing:0;
+    font-weight:700; background:var(--fam-color); border-radius:999px; padding:1px 9px; font-size:11px;
+  }
+  .fam-section .fam-selected[hidden]{display:none;}
+  .fam-section .fam-chevron{margin-left:auto; font-size:12px; color:var(--text-dim); transition:transform .18s ease; flex:none;}
+  .fam-section[open] .fam-chevron{transform:rotate(180deg);}
+  .fam-section .drink-grid-wrap{padding:0 14px 14px; background:var(--card);}
+  .drink-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(238px,1fr)); gap:13px; padding-top:14px;}
+  @media (prefers-reduced-motion: reduce){ .fam-section .fam-chevron{transition:none;} }
+
+  .drink-card.fam-alcool{--fam-color:var(--coral);}
+  .drink-card.fam-semalcool{--fam-color:var(--sea);}
+  .drink-card.fam-energetico{--fam-color:var(--sun);}
+  .drink-card{
+    background:var(--card); border:1px solid var(--line); border-top:5px solid var(--fam-color);
+    border-radius:var(--radius-md); padding:13px; display:flex; flex-direction:column; gap:10px;
+  }
+  .drink-top{display:flex; align-items:center; gap:10px;}
+  .drink-icon{
+    width:36px; height:36px; flex:none; border-radius:10px; font-size:17px;
+    background:color-mix(in srgb, var(--fam-color) 20%, var(--card));
+    border:1px solid color-mix(in srgb, var(--fam-color) 35%, var(--line));
+    display:flex; align-items:center; justify-content:center;
+  }
+  .drink-name{font-weight:800; font-size:14.5px; line-height:1.2;}
+  .chips{display:flex; flex-wrap:wrap; gap:5px;}
+  .chip{
+    font-family:var(--font-mono); font-size:11px; color:var(--text-dim);
+    background:var(--card-2); border:1px solid var(--line); padding:2px 7px; border-radius:999px; white-space:nowrap;
+  }
+  .chip.unpriced{color:var(--coral-deep); border-color:color-mix(in srgb, var(--coral) 40%, var(--line));}
+
+  .drink-stats{display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; padding-top:2px; border-top:1px dashed var(--line);}
+  .drink-stats .stat{display:flex; flex-direction:column; gap:2px; min-width:0;}
+  .drink-stats .k{font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--text-dim);}
+  .drink-stats .v{font-family:var(--font-mono); font-weight:700; font-size:13px;}
+  .venda-input{
+    width:100%; font-family:var(--font-mono); font-size:12.5px; font-weight:700;
+    background:var(--card-2); border:1px solid var(--line); color:var(--text);
+    border-radius:7px; padding:3px 6px;
+  }
+  .venda-input:focus-visible{outline:2px solid var(--sea); outline-offset:1px;}
+  .lucro{font-family:var(--font-mono); font-weight:700;}
+  .lucro.pos{color:var(--good);}
+  .lucro.neg{color:var(--bad);}
+  .lucro.pending{color:var(--text-dim); font-weight:600; font-size:11px; font-family:var(--font-body);}
+
+  .stepper{
+    display:flex; align-items:center; justify-content:space-between; gap:6px;
+    background:var(--card-2); border:1px solid var(--line); border-radius:999px; padding:4px;
+  }
+  .stepper button{
+    width:27px; height:27px; border-radius:50%; border:none; cursor:pointer; flex:none;
+    background:var(--card); color:var(--text); font-size:15px; font-weight:800;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 1px 0 var(--line);
+  }
+  .stepper button:hover{background:var(--fam-color, var(--sun)); color:var(--ink-on-accent);}
+  .stepper button:focus-visible{outline:2px solid var(--sea); outline-offset:2px;}
+  .stepper input{
+    width:100%; text-align:center; border:none; background:transparent; color:var(--text);
+    font-family:var(--font-mono); font-weight:700; font-size:14px;
+  }
+  .stepper input:focus-visible{outline:2px solid var(--sea); border-radius:4px;}
+
+  /* ---------- Ingredient stock panel ---------- */
+  .stock-search{padding:14px 18px 10px; border-bottom:1px solid var(--line);}
+  .stock-search input{
+    width:100%; padding:9px 12px; border-radius:999px; border:1px solid var(--line);
+    background:var(--bg); color:var(--text); font-family:var(--font-body); font-size:13.5px;
+  }
+  .stock-search input:focus-visible{outline:2px solid var(--sea); outline-offset:1px;}
+  .stock-chips{display:flex; flex-wrap:wrap; gap:7px; padding:0 18px 14px; border-bottom:1px solid var(--line);}
+  .cat-chip{
+    appearance:none; cursor:pointer; font-family:var(--font-body); font-weight:800; font-size:11.5px;
+    letter-spacing:.03em; padding:6px 11px 6px 9px; border-radius:8px 8px 8px 2px;
+    border:1.5px dashed var(--chip-color); background:transparent; color:var(--chip-color);
+    display:inline-flex; align-items:center; gap:5px;
+  }
+  .cat-chip[aria-pressed="true"]{background:var(--chip-color); color:var(--ink-on-accent); border-style:solid;}
+  .stock-scroll{max-height:560px; overflow-y:auto;}
+  .stock-cat-head{
+    position:sticky; top:0; z-index:1;
+    padding:8px 18px; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:800;
+    color:var(--text-dim); background:var(--card-2); border-bottom:1px solid var(--line); border-top:1px solid var(--line);
+  }
+  .stock-row{display:flex; align-items:baseline; gap:8px; padding:8px 18px; font-size:13.5px;}
+  .stock-row .n{white-space:nowrap;}
+  .stock-row .dots{flex:1; border-bottom:2px dotted var(--line); transform:translateY(-4px); min-width:14px;}
+  .stock-row .p{font-family:var(--font-mono); font-weight:700; color:var(--sun-deep); white-space:nowrap;}
+  .stock-note{padding:12px 18px; font-size:12px; color:var(--text-dim); background:var(--card-2); border-top:1px solid var(--line);}
+
+  /* ---------- Footer bar ---------- */
+  .footer-bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:20;
+    background:linear-gradient(90deg, var(--sea-deep), var(--sea));
+    border-top:3px solid var(--sun);
+    box-shadow:0 -14px 30px -18px rgba(0,0,0,.4);
+  }
+  .footer-inner{
+    max-width:1180px; margin:0 auto; padding:12px 20px;
+    display:flex; align-items:center; gap:18px; flex-wrap:wrap; justify-content:space-between;
+  }
+  .totals{display:flex; gap:18px; flex-wrap:wrap;}
+  .total-cell{font-size:12px; color:rgba(255,248,232,.75); display:flex; flex-direction:column; gap:2px;}
+  .total-cell b{font-family:var(--font-mono); font-size:15px; color:#FFF8E8; font-weight:700;}
+  .total-cell.good b{color:var(--sun);}
+
+  /* ---------- Modal ---------- */
+  .modal-veil{position:fixed; inset:0; background:rgba(5,15,17,.55); backdrop-filter:blur(2px); display:flex; align-items:flex-end; justify-content:center; z-index:40;}
+  .modal-veil[hidden]{display:none;}
+  .modal{width:100%; max-width:760px; max-height:min(82vh,720px); overflow-y:auto; background:var(--card); border:1px solid var(--line); border-radius:20px 20px 0 0; box-shadow:var(--shadow); padding:22px 22px 26px;}
+  @media (min-width:640px){ .modal-veil{align-items:center;} .modal{border-radius:var(--radius-lg); margin:20px;} }
+  .modal-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px;}
+  .modal-head h3{font-size:21px;}
+  table.list-table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  table.list-table th{text-align:left; font-family:var(--font-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); padding:6px 8px; border-bottom:1px solid var(--line);}
+  table.list-table td{padding:8px; border-bottom:1px solid var(--line); vertical-align:top;}
+  table.list-table td.num{font-family:var(--font-mono); text-align:right; white-space:nowrap;}
+  .table-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius-md);}
+  .modal-section{margin-top:18px;}
+  .modal-section h4{font-family:var(--font-body); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); margin:0 0 8px;}
+  .empty-note{padding:22px; text-align:center; color:var(--text-dim); font-size:14px;}
+
+  .icon-btn{width:32px; height:32px; border-radius:50%; border:1px solid var(--line); background:var(--card-2); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px;}
+  .icon-btn:hover{border-color:var(--sea);}
+  .icon-btn:focus-visible{outline:2px solid var(--sea); outline-offset:2px;}
+
+  ::-webkit-scrollbar{width:10px; height:10px;}
+  ::-webkit-scrollbar-thumb{background:var(--line); border-radius:99px;}
+
+  @media (prefers-reduced-motion: reduce){ .btn, .stepper button{transition:none;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <svg class="hero-palms" viewBox="0 0 1180 220" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <g fill="#04222A" opacity="0.28">
+        <path d="M60 220 C55 150 40 120 0 100 C45 95 70 115 82 150 C88 118 78 90 45 60 C90 65 108 100 108 140 C118 105 112 70 90 35 C130 50 140 90 128 140 C150 115 155 85 140 45 C170 70 168 110 145 150 C160 210 150 220 150 220 Z"/>
+      </g>
+      <g fill="#04222A" opacity="0.22">
+        <path d="M1040 220 C1048 160 1070 130 1120 112 C1078 104 1048 122 1032 155 C1028 122 1042 92 1078 65 C1032 68 1010 104 1008 145 C996 110 1000 74 1024 40 C990 58 980 100 992 148 C972 118 968 90 982 55 C955 82 954 122 976 158 C965 210 972 220 972 220 Z"/>
+      </g>
+    </svg>
+    <svg class="hero-stamp" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="100" cy="100" r="86" fill="none" stroke="#FFF3D2" stroke-width="2" stroke-dasharray="3 6" opacity="0.6"/>
+      <circle cx="100" cy="100" r="68" fill="#FFF3D2" opacity="0.1"/>
+      <path id="arcTop" d="M 26 108 A 74 74 0 0 1 174 108" fill="none"/>
+      <path id="arcBot" d="M 174 96 A 74 74 0 0 1 26 96" fill="none"/>
+      <text font-family="Bungee, sans-serif" font-size="13.5" fill="#FFF3D2" letter-spacing="2" opacity="0.85">
+        <textPath href="#arcTop" startOffset="50%" text-anchor="middle">ILHA · BAHAMAS</textPath>
+      </text>
+      <text font-family="Bungee, sans-serif" font-size="13.5" fill="#FFF3D2" letter-spacing="2" opacity="0.85">
+        <textPath href="#arcBot" startOffset="50%" text-anchor="middle">GTA V · PEAKY B</textPath>
+      </text>
+      <text x="100" y="112" text-anchor="middle" font-family="Bungee, sans-serif" font-size="24" fill="#FFF3D2" opacity="0.9">★</text>
+    </svg>
+    <span class="hero-eyebrow">Peaky B &middot; Beach Bar</span>
+    <h1 class="title">BAR <em>BAHAMAS</em></h1>
+    <p class="hero-sub">Lista de receitas do bar da ilha e stock de ingredientes. Seleciona as quantidades de cada cocktail para calcular custo, definir preço de venda e gerar a lista de preparação.</p>
+    <div class="hero-stats" id="heroStats"></div>
+    <svg class="wave" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 14 C 150 24 300 4 450 14 C 600 24 750 4 900 14 C 1000 20 1100 8 1200 14 L1200 24 L0 24 Z" fill="var(--bg)"></path>
+    </svg>
+  </header>
+
+  <main class="grid">
+    <section class="panel" aria-labelledby="receitasTitle">
+      <div class="panel-head">
+        <h2 id="receitasTitle">🍹 Receitas</h2>
+        <div class="panel-actions" style="display:flex; gap:8px; align-items:center;">
+          <span class="count" id="recCount"></span>
+          <button class="btn btn-ghost" id="btnLimpar" type="button">↺ Limpar</button>
+        </div>
+      </div>
+      <div class="panel-body" id="recipeList"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="stockTitle">
+      <div class="panel-head">
+        <h2 id="stockTitle">🌴 Stock de Ingredientes</h2>
+        <span class="count" id="stockCount"></span>
+      </div>
+      <div class="stock-search">
+        <input type="search" id="stockSearch" placeholder="Procurar ingrediente…" aria-label="Procurar ingrediente">
+      </div>
+      <div class="stock-chips" id="stockChips"></div>
+      <div class="stock-scroll" id="stockScroll"></div>
+      <p class="stock-note">Grão de Café é fornecido pelo bar — sem preço de compra na lista, por isso não entra no custo.</p>
+    </section>
+  </main>
+</div>
+
+<div class="footer-bar">
+  <div class="footer-inner">
+    <div class="totals">
+      <div class="total-cell">Receitas selecionadas<b class="tabular" id="totSel">0</b></div>
+      <div class="total-cell">Custo total<b class="tabular" id="totCusto">0,00 €</b></div>
+      <div class="total-cell">Venda total<b class="tabular" id="totVenda">0,00 €</b></div>
+      <div class="total-cell good">Lucro total<b class="tabular" id="totLucro">0,00 €</b></div>
+    </div>
+    <button class="btn btn-accent" id="btnLista" type="button">📋 Ver Lista</button>
+  </div>
+</div>
+
+<div class="modal-veil" id="modalVeil" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head">
+      <h3 id="modalTitle">Lista de Preparação</h3>
+      <button class="icon-btn" id="btnCloseModal" aria-label="Fechar">✕</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Data ---------- */
+  var CATS = [
+    { key:'frutas', label:'Frutas', icon:'🍇', color:'var(--coral)', items:[
+      ['Uvas',145],['Pera da Horta',115],['Morangos',115],['Ananás',115],['Azeitonas',85],
+      ['Manga',100],['Banana',145],['Kiwi',135],['Limão',115],['Laranja',115],
+      ['Mirtilo',115],['Coco',95],['Tomate',95]
+    ]},
+    { key:'legumes', label:'Legumes', icon:'🌿', color:'var(--good)', items:[
+      ['Alface',65],['Baunilha',75],['Cogumelos',95],['Alho',95],['Coentros',80],
+      ['Batata',95],['Cebola',95],['Pimenta',85],['Arroz',50],['Folhas de Chá',80]
+    ]},
+    { key:'outros', label:'Outros', icon:'📦', color:'var(--sun-deep)', items:[
+      ['Frango',200],['Pão',210],['Queijo',60],['Ovos',200],['Fiambre',300],
+      ['Açúcar',200],['Farinha',200],['Massa Folhada',200],['Azeite',210],
+      ['Chouriço',300],['Carne',200],['Presunto',300],['Leitão',300],['Leite',75]
+    ]},
+    { key:'extras', label:'Extras', icon:'✨', color:'var(--violet)', items:[
+      ['Gelo',40],['Receita Secreta',20]
+    ]},
+    { key:'bebidas', label:'Bebidas & Base', icon:'🍾', color:'var(--sea)', items:[
+      ['Alchool',500],['Garrafão de Água',10],['Cerveja',80],['Água Tónica',30]
+    ]}
+  ];
+
+  var FAM_META = {
+    alcool:{ label:'Bebidas Com Álcool', icon:'🍸' },
+    semalcool:{ label:'Bebidas Sem Álcool', icon:'🥤' },
+    energetico:{ label:'Energéticos', icon:'⚡' }
+  };
+  var FAM_ORDER = ['alcool','semalcool','energetico'];
+
+  var RECIPES = [
+    { id:'vodka', n:'Vodka', icon:'🥃', fam:'alcool', ing:[['Alchool',1],['Batata',1],['Garrafão de Água',1]] },
+    { id:'whiskey', n:'Whiskey', icon:'🥃', fam:'alcool', ing:[['Alchool',1],['Farinha',1],['Garrafão de Água',1]] },
+    { id:'champagne', n:'Champagne', icon:'🥂', fam:'alcool', ing:[['Garrafão de Água',1],['Uvas',1],['Alchool',1],['Gelo',1],['Açúcar',1]] },
+    { id:'caipirinha', n:'Caipirinha', icon:'🍹', fam:'alcool', ing:[['Garrafão de Água',1],['Gelo',1],['Alchool',1],['Açúcar',1],['Morango',1]] },
+    { id:'uto-cola', n:'Uto-Cola', icon:'🥤', fam:'semalcool', ing:[['Uvas',1],['Açúcar',1],['Receita Secreta',1],['Garrafão de Água',1]] },
+    { id:'sumol', n:'Garrafa de Sumol', icon:'🧃', fam:'semalcool', ing:[['Garrafão de Água',1],['Açúcar',1],['Receita Secreta',1],['Grão de Café',1]] },
+    { id:'junk-blue', n:'Junk Blue', icon:'⚡', fam:'energetico', ing:[['Açúcar',1],['Garrafão de Água',1],['Mirtilo',2],['Grão de Café',2]] },
+    { id:'junk-green', n:'Junk Green', icon:'⚡', fam:'energetico', ing:[['Açúcar',1],['Garrafão de Água',1],['Pera da Horta',2],['Grão de Café',2]] },
+    { id:'junk-orange', n:'Junk Orange', icon:'⚡', fam:'energetico', ing:[['Açúcar',1],['Garrafão de Água',1],['Laranja',3],['Grão de Café',3]] },
+    { id:'junk-purple', n:'Junk Purple', icon:'⚡', fam:'energetico', ing:[['Banana',3],['Garrafão de Água',3],['Açúcar',3],['Manga',5],['Grão de Café',8]] },
+    { id:'junk-red', n:'Junk Red', icon:'⚡', fam:'energetico', ing:[['Açúcar',2],['Garrafão de Água',2],['Morango',6],['Grão de Café',6]] },
+    { id:'absinto', n:'Absinto', icon:'🍸', fam:'alcool', ing:[['Folhas de Chá',1],['Alchool',1],['Açúcar',1],['Garrafão de Água',1]] },
+    { id:'tequilla', n:'Tequilla', icon:'🥃', fam:'alcool', ing:[['Alchool',1],['Pera da Horta',1],['Garrafão de Água',1]] },
+    { id:'utopal', n:'Utopal de Frutos Vermelhos', icon:'🍷', fam:'semalcool', ing:[['Ananas',1],['Açúcar',1],['Receita Secreta',1],['Garrafão de Água',1]] },
+    { id:'gin', n:'Gin', icon:'🍸', fam:'alcool', ing:[['Gelo',1],['Alchool',1],['Coentros',1],['Garrafão de Água',1]] },
+    { id:'pina-colada', n:'Pina Colada', icon:'🍍', fam:'alcool', ing:[['Garrafão de Água',1],['Ananas',1],['Alchool',1],['Coco',1],['Gelo',1]] },
+    { id:'margarita', n:'Margarita', icon:'🍸', fam:'alcool', ing:[['Garrafão de Água',1],['Ananas',1],['Alchool',1],['Gelo',1],['Açúcar',1]] }
+  ];
+
+  var UNPRICED = { 'grao de cafe':true };
+
+  function norm(s){
+    return s.toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g,'')
+      .replace(/\s+/g,' ').trim()
+      .replace(/s$/,'');
+  }
+
+  var PRICE_MAP = {};
+  CATS.forEach(function(cat){ cat.items.forEach(function(it){ PRICE_MAP[norm(it[0])] = it[1]; }); });
+
+  function priceOf(name){
+    var key = norm(name);
+    if (UNPRICED[key]) return null;
+    return (key in PRICE_MAP) ? PRICE_MAP[key] : null;
+  }
+
+  function euro(v){
+    return v.toLocaleString('pt-PT', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+  }
+
+  RECIPES.forEach(function(r){
+    var cost = 0, missing = [];
+    r.ing.forEach(function(pair){
+      var p = priceOf(pair[0]);
+      if (p === null) { if (missing.indexOf(pair[0]) === -1) missing.push(pair[0]); }
+      else cost += p * pair[1];
+    });
+    r.custoUnit = cost;
+    r.missing = missing;
+  });
+
+  /* Preços de venda ao público (menu oficial do bar) */
+  var DEFAULT_VENDA = {
+    vodka:1500, whiskey:1500, caipirinha:1500, absinto:1500, gin:1500,
+    'uto-cola':1200, sumol:1200, utopal:1200,
+    'junk-green':2000, 'junk-blue':2500, 'junk-orange':3000, 'junk-red':4000, 'junk-purple':5000
+  };
+
+  /* ---------- State ---------- */
+  var state = { qty:{}, venda:{} };
+  RECIPES.forEach(function(r){ state.qty[r.id] = 0; state.venda[r.id] = (r.id in DEFAULT_VENDA) ? DEFAULT_VENDA[r.id] : null; });
+  var hiddenCats = {};
+
+  function snapshot(){ return { qty: state.qty, venda: state.venda, hiddenCats: hiddenCats }; }
+  function restore(data){
+    if (data && data.qty) { Object.keys(data.qty).forEach(function(k){ if (k in state.qty) state.qty[k] = data.qty[k]; }); }
+    if (data && data.venda) { Object.keys(data.venda).forEach(function(k){ if (k in state.venda) state.venda[k] = data.venda[k]; }); }
+    if (data && data.hiddenCats) { hiddenCats = data.hiddenCats; }
+  }
+
+  function renderHeroStats(){
+    var ingredientCount = 0;
+    CATS.forEach(function(c){ ingredientCount += c.items.length; });
+    document.getElementById('heroStats').innerHTML =
+      '<span class="hero-stat"><b>' + RECIPES.length + '</b> receitas</span>' +
+      '<span class="hero-stat"><b>' + ingredientCount + '</b> ingredientes em stock</span>' +
+      '<span class="hero-stat"><b>4</b> categorias</span>';
+  }
+
+  function ingLabel(name, n){
+    var p = priceOf(name);
+    return { text:n + 'x ' + name, unpriced:p === null };
+  }
+
+  function drinkCardHtml(r){
+    var qty = state.qty[r.id];
+    var venda = state.venda[r.id];
+    var chips = r.ing.map(function(pair){
+      var lab = ingLabel(pair[0], pair[1]);
+      return '<span class="chip' + (lab.unpriced ? ' unpriced' : '') + '">' + lab.text + '</span>';
+    }).join('');
+    var lucroHtml;
+    if (venda !== null){
+      var lucroUnit = venda - r.custoUnit;
+      lucroHtml = '<span class="v lucro ' + (lucroUnit >= 0 ? 'pos' : 'neg') + ' tabular">' + (lucroUnit >= 0 ? '+' : '') + euro(lucroUnit) + '</span>';
+    } else {
+      lucroHtml = '<span class="v lucro pending">definir →</span>';
+    }
+    return (
+      '<article class="drink-card fam-' + r.fam + '" data-id="' + r.id + '">' +
+        '<div class="drink-top">' +
+          '<span class="drink-icon" aria-hidden="true">' + r.icon + '</span>' +
+          '<span class="drink-name">' + r.n + '</span>' +
+        '</div>' +
+        '<div class="chips">' + chips + '</div>' +
+        '<div class="drink-stats">' +
+          '<div class="stat"><span class="k">Custo un.</span><span class="v custo tabular">' + euro(r.custoUnit) + '</span></div>' +
+          '<div class="stat"><span class="k">Venda un.</span>' +
+            '<input type="number" min="0" step="1" inputmode="numeric" class="venda-input" id="venda-' + r.id + '" placeholder="—" value="' + (venda !== null ? venda : '') + '" aria-label="Preço de venda de ' + r.n + '"></div>' +
+          '<div class="stat"><span class="k">Lucro un.</span>' + lucroHtml + '</div>' +
+        '</div>' +
+        '<div class="stepper">' +
+          '<button type="button" class="qty-dec" aria-label="Diminuir quantidade de ' + r.n + '">−</button>' +
+          '<input type="number" min="0" class="qty-input tabular" id="qty-' + r.id + '" value="' + qty + '" aria-label="Quantidade de ' + r.n + '">' +
+          '<button type="button" class="qty-inc" aria-label="Aumentar quantidade de ' + r.n + '">+</button>' +
+        '</div>' +
+      '</article>'
+    );
+  }
+
+  var FAM_COLOR = { alcool:'var(--coral)', semalcool:'var(--sea)', energetico:'var(--sun-deep)' };
+  var RECIPE_BY_ID = {};
+  RECIPES.forEach(function(r){ RECIPE_BY_ID[r.id] = r; });
+
+  function famSelectedCount(famKey){
+    var n = 0;
+    RECIPES.forEach(function(r){ if (r.fam === famKey && state.qty[r.id] > 0) n++; });
+    return n;
+  }
+
+  function renderRecipes(){
+    var wrap = document.getElementById('recipeList');
+    var html = FAM_ORDER.map(function(famKey, idx){
+      var meta = FAM_META[famKey];
+      var items = RECIPES.filter(function(r){ return r.fam === famKey; });
+      var selCount = famSelectedCount(famKey);
+      return (
+        '<details class="fam-section fam-' + famKey + '"' + (idx === 0 ? ' open' : '') + '>' +
+          '<summary style="--fam-color:' + FAM_COLOR[famKey] + '">' +
+            '<span class="fam-dot"></span>' + meta.icon + ' ' + meta.label +
+            ' <span class="fam-count">' + items.length + '</span>' +
+            ' <span class="fam-selected" data-fam="' + famKey + '"' + (selCount === 0 ? ' hidden' : '') + '>' + selCount + ' selecionada' + (selCount === 1 ? '' : 's') + '</span>' +
+            '<span class="fam-chevron">⌄</span>' +
+          '</summary>' +
+          '<div class="drink-grid-wrap"><div class="drink-grid">' + items.map(drinkCardHtml).join('') + '</div></div>' +
+        '</details>'
+      );
+    }).join('');
+    wrap.innerHTML = html;
+
+    document.getElementById('recCount').textContent = RECIPES.length + ' receitas';
+
+    wrap.querySelectorAll('.drink-card').forEach(function(el){
+      var id = el.getAttribute('data-id');
+      el.querySelector('.qty-dec').addEventListener('click', function(){ setQty(id, state.qty[id] - 1); });
+      el.querySelector('.qty-inc').addEventListener('click', function(){ setQty(id, state.qty[id] + 1); });
+      el.querySelector('.qty-input').addEventListener('input', function(e){ setQty(id, parseInt(e.target.value, 10) || 0, true); });
+      el.querySelector('.venda-input').addEventListener('input', function(e){
+        var v = e.target.value === '' ? null : Math.max(0, parseFloat(e.target.value));
+        state.venda[id] = (v === null || isNaN(v)) ? null : v;
+        renderRecipeMoney(id);
+        renderFooter();
+      });
+    });
+  }
+
+  function updateFamBadge(famKey){
+    var el = document.querySelector('.fam-selected[data-fam="' + famKey + '"]');
+    if (!el) return;
+    var n = famSelectedCount(famKey);
+    el.textContent = n + ' selecionada' + (n === 1 ? '' : 's');
+    el.hidden = n === 0;
+  }
+
+  function setQty(id, val, skipInputSync){
+    if (val < 0) val = 0;
+    state.qty[id] = val;
+    var input = document.getElementById('qty-' + id);
+    if (input) input.value = val;
+    renderRecipeMoney(id);
+    renderFooter();
+    var r = RECIPE_BY_ID[id];
+    if (r) updateFamBadge(r.fam);
+  }
+
+  function renderRecipeMoney(id){
+    var r = RECIPE_BY_ID[id];
+    var el = document.querySelector('.drink-card[data-id="' + id + '"]');
+    if (!r || !el) return;
+    var venda = state.venda[id];
+    el.querySelector('.custo').textContent = euro(r.custoUnit);
+    var lucroEl = el.querySelector('.lucro');
+    if (venda !== null){
+      var lucroUnit = venda - r.custoUnit;
+      lucroEl.className = 'v lucro ' + (lucroUnit >= 0 ? 'pos' : 'neg') + ' tabular';
+      lucroEl.textContent = (lucroUnit >= 0 ? '+' : '') + euro(lucroUnit);
+    } else {
+      lucroEl.className = 'v lucro pending';
+      lucroEl.textContent = 'definir →';
+    }
+  }
+
+  function renderStock(filter){
+    filter = (filter || '').trim().toLowerCase();
+
+    var chipsEl = document.getElementById('stockChips');
+    chipsEl.innerHTML = CATS.map(function(cat){
+      var active = !hiddenCats[cat.key];
+      return '<button type="button" class="cat-chip" data-cat="' + cat.key + '" style="--chip-color:' + cat.color + '" aria-pressed="' + active + '">' + cat.icon + ' ' + cat.label + '</button>';
+    }).join('');
+    chipsEl.querySelectorAll('.cat-chip').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var key = btn.getAttribute('data-cat');
+        hiddenCats[key] = !hiddenCats[key];
+        renderStock(document.getElementById('stockSearch').value);
+      });
+    });
+
+    var scroll = document.getElementById('stockScroll');
+    var html = '';
+    var totalShown = 0;
+    CATS.forEach(function(cat){
+      if (hiddenCats[cat.key]) return;
+      var rows = cat.items.filter(function(it){ return !filter || it[0].toLowerCase().indexOf(filter) !== -1; });
+      if (!rows.length) return;
+      totalShown += rows.length;
+      html += '<div class="stock-cat-head">' + cat.icon + ' ' + cat.label + '</div>';
+      rows.forEach(function(it){
+        html += '<div class="stock-row"><span class="n">' + it[0] + '</span><span class="dots"></span><span class="p tabular">' + euro(it[1]) + '</span></div>';
+      });
+    });
+    if (!html) html = '<p class="empty-note">Nenhum ingrediente encontrado.</p>';
+    scroll.innerHTML = html;
+
+    var totalAll = 0;
+    CATS.forEach(function(c){ totalAll += c.items.length; });
+    document.getElementById('stockCount').textContent = totalShown + ' / ' + totalAll + ' itens';
+  }
+
+  function renderFooter(){
+    var selected = 0, custo = 0, venda = 0, lucro = 0;
+    RECIPES.forEach(function(r){
+      var qty = state.qty[r.id];
+      if (qty > 0) selected++;
+      custo += r.custoUnit * qty;
+      if (state.venda[r.id] !== null){
+        venda += state.venda[r.id] * qty;
+        lucro += (state.venda[r.id] - r.custoUnit) * qty;
+      }
+    });
+    document.getElementById('totSel').textContent = String(selected);
+    document.getElementById('totCusto').textContent = euro(custo);
+    document.getElementById('totVenda').textContent = euro(venda);
+    document.getElementById('totLucro').textContent = (lucro >= 0 ? '+' : '') + euro(lucro);
+  }
+
+  function buildList(){
+    var selectedRecipes = RECIPES.filter(function(r){ return state.qty[r.id] > 0; });
+    if (!selectedRecipes.length){
+      return '<p class="empty-note">Ainda não selecionaste nenhuma quantidade. Usa os botões + nas receitas para começar a lista.</p>';
+    }
+
+    var need = {};
+    selectedRecipes.forEach(function(r){
+      var qty = state.qty[r.id];
+      r.ing.forEach(function(pair){
+        var key = norm(pair[0]);
+        if (!need[key]) need[key] = { label:pair[0], qty:0, price:priceOf(pair[0]) };
+        need[key].qty += pair[1] * qty;
+      });
+    });
+    var needList = Object.keys(need).map(function(k){ return need[k]; })
+      .sort(function(a,b){ return a.label.localeCompare(b.label, 'pt'); });
+
+    var custoTotal = 0, vendaTotal = 0, lucroTotal = 0;
+    var recipeRows = selectedRecipes.map(function(r){
+      var qty = state.qty[r.id];
+      var c = r.custoUnit * qty;
+      custoTotal += c;
+      var vRow = '<td class="num">—</td><td class="num">—</td>';
+      if (state.venda[r.id] !== null){
+        var v = state.venda[r.id] * qty;
+        var l = v - c;
+        vendaTotal += v; lucroTotal += l;
+        vRow = '<td class="num">' + euro(v) + '</td><td class="num">' + (l>=0?'+':'') + euro(l) + '</td>';
+      }
+      return '<tr><td>' + r.icon + ' ' + r.n + '</td><td class="num">' + qty + '</td><td class="num">' + euro(c) + '</td>' + vRow + '</tr>';
+    }).join('');
+
+    var ingRows = needList.map(function(it){
+      var priced = it.price !== null;
+      var sub = priced ? euro(it.price * it.qty) : 'incluído';
+      return '<tr><td>' + it.label + '</td><td class="num">' + it.qty + '</td><td class="num">' + (priced ? euro(it.price) : '—') + '</td><td class="num">' + sub + '</td></tr>';
+    }).join('');
+
+    return (
+      '<div class="modal-section">' +
+        '<h4>Receitas a preparar</h4>' +
+        '<div class="table-wrap"><table class="list-table">' +
+          '<thead><tr><th>Receita</th><th>Qtd</th><th>Custo</th><th>Venda</th><th>Lucro</th></tr></thead>' +
+          '<tbody>' + recipeRows + '</tbody>' +
+        '</table></div>' +
+      '</div>' +
+      '<div class="modal-section">' +
+        '<h4>Ingredientes necessários</h4>' +
+        '<div class="table-wrap"><table class="list-table">' +
+          '<thead><tr><th>Ingrediente</th><th>Qtd</th><th>Preço un.</th><th>Subtotal</th></tr></thead>' +
+          '<tbody>' + ingRows + '</tbody>' +
+        '</table></div>' +
+      '</div>' +
+      '<div class="modal-section">' +
+        '<h4>Totais</h4>' +
+        '<div class="hero-stats" style="margin-top:0;">' +
+          '<span class="hero-stat" style="background:var(--card-2); border-color:var(--line); color:var(--text);">Custo <b class="tabular" style="color:var(--sun-deep);">' + euro(custoTotal) + '</b></span>' +
+          '<span class="hero-stat" style="background:var(--card-2); border-color:var(--line); color:var(--text);">Venda <b class="tabular" style="color:var(--sun-deep);">' + euro(vendaTotal) + '</b></span>' +
+          '<span class="hero-stat" style="background:var(--card-2); border-color:var(--line); color:var(--text);">Lucro <b class="tabular" style="color:var(--good);">' + (lucroTotal>=0?'+':'') + euro(lucroTotal) + '</b></span>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function openModal(){
+    document.getElementById('modalBody').innerHTML = buildList();
+    document.getElementById('modalVeil').hidden = false;
+  }
+  function closeModal(){ document.getElementById('modalVeil').hidden = true; }
+
+  function wireGlobal(){
+    document.getElementById('btnLista').addEventListener('click', openModal);
+    document.getElementById('btnCloseModal').addEventListener('click', closeModal);
+    document.getElementById('modalVeil').addEventListener('click', function(e){ if (e.target.id === 'modalVeil') closeModal(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeModal(); });
+    document.getElementById('btnLimpar').addEventListener('click', function(){
+      RECIPES.forEach(function(r){ state.qty[r.id] = 0; });
+      renderRecipes();
+      renderFooter();
+    });
+    document.getElementById('stockSearch').addEventListener('input', function(e){ renderStock(e.target.value); });
+  }
+
+  function render(){
+    renderHeroStats();
+    renderRecipes();
+    renderStock('');
+    renderFooter();
+  }
+
+  function start(data){
+    restore(data);
+    render();
+    wireGlobal();
+  }
+
+  if (window.claude && window.claude.hot){
+    window.claude.hot.snapshot(snapshot);
+    if (window.claude.hot.ready) window.claude.hot.ready(start);
+    else start(window.claude.hot.data || {});
+  } else {
+    start({});
+  }
+})();
+</script>
+</body>
+</html>
